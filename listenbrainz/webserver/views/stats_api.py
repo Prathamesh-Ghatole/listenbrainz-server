@@ -845,6 +845,7 @@ def _get_artist_map_stats(user_id, stats_range):
     if not force_recalculate:
         stats = cache.get(key, decode=False)
         if stats is not None:
+            print(stats)
             return ujson.loads(stats)
 
     artist_stats = db_stats.get_user_stats(user_id, stats_range, 'artists')
