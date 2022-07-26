@@ -984,8 +984,8 @@ class StatsAPITestCase(IntegrationTestCase):
         """ Test to make sure the endpoint returns correct cached response """
         with open(self.path_to_data_file('user_artist_map_db_data_for_api_test_week.json'), 'r') as f:
             payload = json.load(f)
+        cache.set(f"{ARTIST_MAP_CACHE_PREFIX}:week:{self.user['id']}", payload, 0)
 
-        db_stats.insert_user_jsonb_data(self.user['id'], 'artist_map', StatRange[UserArtistMapRecord](**payload))
         response = self.client.get(url_for('stats_api_v1.get_artist_map',
                                            user_name=self.user['musicbrainz_id']), query_string={'range': 'week'})
         self.assert200(response)
@@ -1001,8 +1001,8 @@ class StatsAPITestCase(IntegrationTestCase):
         """ Test to make sure the endpoint returns correct cached response """
         with open(self.path_to_data_file('user_artist_map_db_data_for_api_test_month.json'), 'r') as f:
             payload = json.load(f)
+        cache.set(f"{ARTIST_MAP_CACHE_PREFIX}:month:{self.user['id']}", payload, 0)
 
-        db_stats.insert_user_jsonb_data(self.user['id'], 'artist_map', StatRange[UserArtistMapRecord](**payload))
         response = self.client.get(url_for('stats_api_v1.get_artist_map',
                                            user_name=self.user['musicbrainz_id']), query_string={'range': 'month'})
         self.assert200(response)
@@ -1018,8 +1018,8 @@ class StatsAPITestCase(IntegrationTestCase):
         """ Test to make sure the endpoint returns correct cached response """
         with open(self.path_to_data_file('user_artist_map_db_data_for_api_test_year.json'), 'r') as f:
             payload = json.load(f)
+        cache.set(f"{ARTIST_MAP_CACHE_PREFIX}:year:{self.user['id']}", payload, 0)
 
-        db_stats.insert_user_jsonb_data(self.user['id'], 'artist_map', StatRange[UserArtistMapRecord](**payload))
         response = self.client.get(url_for('stats_api_v1.get_artist_map',
                                            user_name=self.user['musicbrainz_id']), query_string={'range': 'year'})
         self.assert200(response)
