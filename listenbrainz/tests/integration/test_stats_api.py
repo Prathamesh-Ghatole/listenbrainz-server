@@ -3,6 +3,8 @@ from copy import deepcopy
 from datetime import datetime
 from unittest.mock import patch
 
+from brainzutils import cache
+
 import listenbrainz.db.stats as db_stats
 import listenbrainz.db.user as db_user
 import requests_mock
@@ -18,6 +20,8 @@ from listenbrainz.config import LISTENBRAINZ_LABS_API_URL
 from listenbrainz.tests.integration import IntegrationTestCase
 from redis import Redis
 from flask import current_app
+
+from listenbrainz.webserver.views.stats_api import ARTIST_MAP_CACHE_PREFIX
 
 
 class MockDate(datetime):
@@ -66,8 +70,7 @@ class StatsAPITestCase(IntegrationTestCase):
         # Insert artist map data
         with open(self.path_to_data_file('user_artist_map_db_data_for_api_test.json')) as f:
             self.artist_map_payload = json.load(f)
-        db_stats.insert_user_jsonb_data(self.user['id'], 'artist_map',
-                                        StatRange[UserArtistMapRecord](**self.artist_map_payload))
+        cache.set(f"{ARTIST_MAP_CACHE_PREFIX}:all_time:{self.user['id']}", self.artist_map_payload, 0)
 
         # Insert all_time sitewide top artists
         with open(self.path_to_data_file('sitewide_top_artists_db_data_for_api_test.json'), 'r') as f:
